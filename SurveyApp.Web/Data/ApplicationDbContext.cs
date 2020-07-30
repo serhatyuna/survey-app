@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SurveyApp.Web.Models;
 
 namespace SurveyApp.Web.Data
 {
@@ -12,5 +10,21 @@ namespace SurveyApp.Web.Data
 				: base(options)
 		{
 		}
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.Entity<FilledSurveyOption>()
+					.HasKey(t => new { t.FilledSurveyId, t.OptionId });
+		}
+
+		public DbSet<Survey> Surveys { get; set; }
+
+		public DbSet<Question> Questions { get; set; }
+
+		public DbSet<Option> Options { get; set; }
+
+		public DbSet<FilledSurvey> FilledSurveys { get; set; }
 	}
 }
