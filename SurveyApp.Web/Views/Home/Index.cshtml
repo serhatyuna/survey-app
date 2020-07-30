@@ -3,6 +3,13 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="home-title mt-4">Welcome to Survey App!</h1>
+    <div class="d-flex flex-column flex-sm-row align-items-center row mt-4">
+        <div class="col">
+            <partial name="_SurveyVector" />
+        </div>
+        <div class="col mt-3 mt-sm-0">
+            <p class="home-description">Now <a asp-area="Identity" asp-page="/Account/Register">register</a> and start to create a new survey to share with people. You can view the results of your surveys and analyze them.</p>
+        </div>
+    </div>
 </div>
