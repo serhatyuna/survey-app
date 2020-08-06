@@ -1,0 +1,37 @@
+﻿@model SurveyListViewModel
+
+@{
+    ViewData["Title"] = "Surveys";
+}
+
+<div class="panel panel-default todo-panel">
+    <div class="panel-heading mb-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0" style="font-size: 1.5rem">@ViewData["Title"]</h3>
+            <a class="btn btn-primary" asp-area="" asp-controller="Survey" asp-action="Create">Create Survey</a>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Surveys.FirstOrDefault().Title)</td>
+                <td>@Html.DisplayNameFor(model => model.Surveys.FirstOrDefault().CreatedAt)</td>
+                <td>@Html.DisplayNameFor(model => model.Surveys.FirstOrDefault().CountOfFilledSurveys)</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Surveys)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.CountOfFilledSurveys</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (Model.Surveys.Count() == 0)
+    {
+        <p>There is no survey.</p>
+    }
+</div>
