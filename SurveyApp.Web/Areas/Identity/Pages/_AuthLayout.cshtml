@@ -1,0 +1,41 @@
+﻿@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card login-logout-tab">
+            <div class="card-header">
+                <ul class="nav nav-tabs nav-justified card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-content p-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        var current = location.pathname;
+        var listOfLinks = document.querySelectorAll('.nav-tabs li a');
+        listOfLinks.forEach(el => {
+            if (current.indexOf(el.getAttribute('href')) !== -1) {
+                el.classList.add('active');
+            }
+        });
+    </script>
+}
