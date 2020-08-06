@@ -10,12 +10,14 @@ namespace SurveyApp.Web.Models
 	{
 		public int Id { get; set; }
 
+		[Display(Name = "Title")]
 		[Required]
 		public string Title { get; set; }
 
 		[Required]
 		public string UserId { get; set; }
 
+		[Display(Name = "Created At")]
 		public DateTime CreatedAt { get; set; }
 
 		public DateTime UpdatedAt { get; set; }
@@ -23,5 +25,11 @@ namespace SurveyApp.Web.Models
 		public List<Question> Questions { get; set; }
 
 		public List<FilledSurvey> FilledSurveys { get; set; }
+
+		[Display(Name = "# of Answers")]
+		public virtual int CountOfFilledSurveys
+		{
+			get => FilledSurveys.Count();
+		}
 	}
 }
