@@ -1,4 +1,8 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<SurveyApp.Web.Areas.Identity.Data.ApplicationUser> SignInManager
+@inject UserManager<SurveyApp.Web.Areas.Identity.Data.ApplicationUser> UserManager
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -9,7 +13,16 @@
             <partial name="_SurveyVector" />
         </div>
         <div class="col mt-3 mt-sm-0">
-            <p class="home-description">Now <a asp-area="Identity" asp-page="/Account/Register">register</a> and start to create a new survey to share with people. You can view the results of your surveys and analyze them.</p>
+            <p class="home-description">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <text>Now start to create a new survey to share with people. You can view the results of your surveys and analyze them.</text>
+                }
+                else
+                {
+                    <text>Now <a asp-area="Identity" asp-page="/Account/Register">register</a> and start to create a new survey to share with people. You can view the results of your surveys and analyze them.</text>
+                }
+            </p>
         </div>
     </div>
 </div>
