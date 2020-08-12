@@ -1,4 +1,5 @@
 ﻿@model SurveyListViewModel
+@using Humanizer
 
 @{
     ViewData["Title"] = "Surveys";
@@ -8,15 +9,17 @@
     <div class="panel-heading mb-2">
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="mb-0" style="font-size: 1.5rem">@ViewData["Title"]</h3>
-            <a class="btn btn-primary" asp-area="" asp-controller="Survey" asp-action="Create">Create Survey</a>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Create Survey</button>
         </div>
     </div>
     <table class="table table-hover">
         <thead>
             <tr>
                 <td>@Html.DisplayNameFor(model => model.Surveys.FirstOrDefault().Title)</td>
+                <td># of @Html.DisplayNameFor(model => model.Surveys.FirstOrDefault().Questions)</td>
+                <td># of @Html.DisplayNameFor(model => model.Surveys.FirstOrDefault().FilledSurveys)</td>
                 <td>@Html.DisplayNameFor(model => model.Surveys.FirstOrDefault().CreatedAt)</td>
-                <td>@Html.DisplayNameFor(model => model.Surveys.FirstOrDefault().CountOfFilledSurveys)</td>
+                <td>Action</td>
             </tr>
         </thead>
         <tbody>
@@ -24,8 +27,14 @@
             {
                 <tr>
                     <td>@item.Title</td>
-                    <td>@item.CreatedAt</td>
-                    <td>@item.CountOfFilledSurveys</td>
+                    <td>@item.Questions.Count</td>
+                    <td>@item.FilledSurveys.Count</td>
+                    <td>@item.CreatedAt.Humanize()</td>
+                    <td>
+                        <a asp-route-Id="@item.Id" asp-action="Details" asp-controller="Survey" asp-area="" class="btn btn-outline-info btn-sm">Details</a>
+                        <button class="btn btn-outline-success btn-sm share-button" data-toggle="modal" data-target="#shareModal" onclick="shareSurvey(@item.Id)">Share</button>
+                        <a asp-route-Id="@item.Id" asp-action="Delete" asp-controller="Survey" asp-area="" class="btn btn-outline-danger btn-sm">Delete</a>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -35,3 +44,83 @@
         <p>There is no survey.</p>
     }
 </div>
+
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Create Survey</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="numberOfQuestions">Number of questions: </label>
+                        <input type="number" max="15" min="1" value="2" id="numberOfQuestions" class="form-control" placeholder="10">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="numberOfOptions">Number of options: </label>
+                        <input type="number" max="10" min="2" value="5" id="numberOfOptions" class="form-control" placeholder="5">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary create-button">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareModalLabel">Share Survey</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control share-modal-input" aria-describedby="button-addon2" disabled>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary share-modal-button" type="button" id="button-addon2">Copy</button>
+                    </div>
+                </div>
+                <p class="copied-text"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
+    <script>
+        $('.create-button').on('click', function() {
+            var questions = $('#numberOfQuestions').val();
+            var options = $('#numberOfOptions').val();
+            var url = "/survey/create?NumberOfQuestions=" + questions + "&NumberOfOptions=" + options;
+            window.location.href = url;
+        });
+
+        function shareSurvey(id) {
+            $('.share-modal-input').val("@Url.Action("Answer", "Survey", null, Context.Request.Scheme)" + "/" + id);
+            $('.share-modal-button').attr('data-clipboard-text', $('.share-modal-input').val());
+            var clipboard = new ClipboardJS('.share-modal-button', {
+                container: document.getElementById('shareModal')
+            });
+            clipboard.on('success', function () {
+                $('.copied-text').html('Copied!');
+            });
+        }
+
+        $('#shareModal').on('hidden.bs.modal', function () {
+            $('.copied-text').html('');
+        });
+    </script>
+}
