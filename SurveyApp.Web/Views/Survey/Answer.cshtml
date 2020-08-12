@@ -1,0 +1,27 @@
+﻿@model Tuple<SurveyViewModel, FilledSurveyViewModel>
+
+@{
+    ViewData["Title"] = "Answer the Survey";
+}
+
+<div class="container">
+    <h3 class="mb-2" style="font-size: 1.5rem">@Model.Item1.Title</h3>
+
+    <div>
+        <h5 class="my-4">Questions</h5>
+        @Model.Item1.Questions.Count
+        @for (int i = 0; i < Model.Item1.Questions.Count; i++)
+        {
+            <div>
+                <div class="mb-3">Q. @Model.Item1.Questions[i].Title</div>
+                @for (int j = 0; j < Model.Item1.Questions[i].Options.Count; j++)
+                {
+                    <div class="pl-2">
+                        <input asp-for="@Model.Item2.FilledSurveyOptions[j]" value="@Model.Item1.Questions[i].Options[j].Id" type="radio" />
+                        <span>@Model.Item1.Questions[i].Options[j].Title</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
