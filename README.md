@@ -12,21 +12,21 @@ requirements:
 
 ### General
 
--   [ ] Survey Coordinators can define, conduct, and view surveys and survey results.
--   [ ] Survey Coordinators can login to the app to access functions, like defining a survey. (/manage)
+-   [X] Survey Coordinators can define, conduct, and view surveys and survey results.
+-   [X] Survey Coordinators can login to the app to access functions, like defining a survey.
 -   [ ] Survey Respondents can answer a survey as a guest.
 
 ### Defining a Survey
 
--   [ ] Survey Coordinator can define a survey containing 1-10 (?) multiple choice questions.
--   [ ] Survey Coordinator can define 1-5 mutually exclusive selections to each question.
--   [ ] Survey Coordinator can enter a title for the survey.
--   [ ] Survey Coordinator can click a 'Cancel' button to return to the home page without saving the survey.
--   [ ] Survey Coordinator can click a 'Save' button save a survey.
--   [ ] After saving the survey, a link for the survey should be created. (/survey/{id})
+-   [X] Survey Coordinator can define a survey containing 1-15 multiple choice questions.
+-   [X] Survey Coordinator can define 1-10 mutually exclusive selections to each question.
+-   [X] Survey Coordinator can enter a title for the survey.
+-   [X] Survey Coordinator can click a 'Cancel' button to return to the home page without saving the survey.
+-   [X] Survey Coordinator can click a 'Save' button save a survey.
+-   [X] After saving the survey, a link for the survey should be created. (/survey/answer/`{id}`)
 
 ### Answering a Survey
--   [ ] Survey Respondents should see the title of the survey and the questions below the title.
+-   [X] Survey Respondents should see the title of the survey and the questions below the title.
 -   [ ] Survey Respondent can select responses to survey questions by clicking on a checkbox
 -   [ ] Survey Respondents can click a 'Submit' button submit their responses to the survey.
 -   [ ] Survey Respondents can click a 'Cancel' button to return to the home page without submitting the survey.
@@ -34,8 +34,8 @@ requirements:
 
 ### Conducting a Survey
 
--   [ ] Survey Coordinator can open a survey by selecting a survey from a list of previously defined surveys
--   [ ] Survey Coordinators can close a survey by selecting it from a list of open surveys
+-   [X] Survey Coordinator can open a survey by selecting a survey from a list of previously defined surveys
+-   [X] Survey Coordinators can close a survey by selecting it from a list of open surveys
 
 ### Viewing Survey Results
 
