@@ -1,0 +1,30 @@
+﻿@model SurveyViewModel
+@using Humanizer
+
+@{
+    ViewData["Title"] = "Survey Details";
+}
+
+<div class="container">
+    <h3 class="mb-2" style="font-size: 1.5rem">@ViewData["Title"]</h3>
+    <div>
+        <span>@Html.DisplayNameFor(model => model.Title): @Model.Title</span>
+    </div>
+    <div>
+        <span>@Html.DisplayNameFor(model => model.CreatedAt): @Model.CreatedAt.Humanize()</span>
+    </div>
+
+    <div>
+        <h5 class="my-4">Questions</h5>
+        @foreach (var question in Model.Questions)
+        {
+            <div>
+                <div class="mb-3">Q. @question.Title</div>
+                @foreach (var option in question.Options)
+                {
+                    <div class="pl-2">• @option.Title</div>
+                }
+            </div>
+        }
+    </div>
+</div>
