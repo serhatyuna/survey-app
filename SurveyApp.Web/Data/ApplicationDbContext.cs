@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SurveyApp.Web.Areas.Identity.Data;
 using SurveyApp.Web.Models;
+using System;
 
 namespace SurveyApp.Web.Data
 {
@@ -27,5 +28,10 @@ namespace SurveyApp.Web.Data
 		public DbSet<Option> Options { get; set; }
 
 		public DbSet<FilledSurvey> FilledSurveys { get; set; }
+
+		internal void UpdateRange(object testRowFatContents)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

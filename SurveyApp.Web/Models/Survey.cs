@@ -25,11 +25,5 @@ namespace SurveyApp.Web.Models
 		public List<Question> Questions { get; set; }
 
 		public List<FilledSurvey> FilledSurveys { get; set; }
-
-		[Display(Name = "# of Answers")]
-		public virtual int CountOfFilledSurveys
-		{
-			get => FilledSurveys.Count();
-		}
 	}
 }
