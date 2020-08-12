@@ -30,7 +30,7 @@ namespace SurveyApp.Web.Controllers
 		{
 			var currentUser = await _userManager.GetUserAsync(User);
 			if (currentUser == null) return Challenge();
-			var surveys = await _surveyService.GetAllSurveys(currentUser);
+			var surveys = await _surveyService.GetAllSurveysAsync(currentUser);
 
 			var model = new SurveyListViewModel()
 			{
@@ -40,22 +40,117 @@ namespace SurveyApp.Web.Controllers
 			return View(model);
 		}
 
-		public IActionResult Create()
+		public IActionResult Create(SurveyCreateViewModel model)
 		{
+			int maxQuestions = 15;
+			int maxOptions = 10;
+
+			bool isInvalid = model == null
+				|| model.NumberOfQuestions <= 0
+				|| model.NumberOfOptions <= 1
+				|| model.NumberOfQuestions > maxQuestions
+				|| model.NumberOfOptions > maxOptions;
+
+			if (isInvalid) return NotFound();
+
+			ViewBag.Numbers = model;
 			return View();
 		}
 
 		[HttpPost]
 		[ActionName("Create")]
 		[ValidateAntiForgeryToken]
-		public IActionResult CreatePost(SurveyViewModel model)
+		public async Task<IActionResult> CreatePost([Bind("Id", "Title", "Questions")] SurveyViewModel model)
 		{
 			if (!ModelState.IsValid)
 			{
-				return RedirectToAction("Index");
+				string messages = string.Join("; ", ModelState.Values
+																				.SelectMany(x => x.Errors)
+																				.Select(x => x.ErrorMessage));
+
+				return RedirectToAction("Create");
 			}
 
-			return Ok();
+			var currentUser = await _userManager.GetUserAsync(User);
+			if (currentUser == null) return Challenge();
+
+			var isSuccessful = await _surveyService.CreateSurveyAsync(model, currentUser);
+
+			if (!isSuccessful)
+			{
+				return RedirectToAction("Create");
+			}
+
+			return RedirectToAction("Index");
+		}
+
+		public async Task<IActionResult> Delete(int id)
+		{
+			var currentUser = await _userManager.GetUserAsync(User);
+			if (currentUser == null) return Challenge();
+
+			if (id <= 0) return RedirectToAction("Index");
+
+			var survey = await _surveyService.GetSurveyOfUserByIdAsync(id, currentUser);
+
+			if (survey == null) return RedirectToAction("Index");
+
+			await _surveyService.DeleteSurveyAsync(survey, currentUser);
+
+			return RedirectToAction("Index");
+		}
+
+		public async Task<IActionResult> Details(int id)
+		{
+			var currentUser = await _userManager.GetUserAsync(User);
+			if (currentUser == null) return Challenge();
+
+			if (id <= 0) return RedirectToAction("Index");
+
+			var survey = await _surveyService.GetSurveyOfUserByIdAsync(id, currentUser);
+
+			if (survey == null) RedirectToAction("Index");
+
+			var model = new SurveyViewModel()
+			{
+				Id = survey.Id,
+				Title = survey.Title,
+				CreatedAt = survey.CreatedAt,
+				UpdatedAt = survey.UpdatedAt,
+				Questions = survey.Questions,
+				FilledSurveys = survey.FilledSurveys
+			};
+
+			return View(model);
+		}
+
+		[AllowAnonymous]
+		public async Task<IActionResult> Answer(int id)
+		{
+			if (id <= 0) return RedirectToAction("Index", "Home");
+
+			var survey = await _surveyService.GetSurveyByIdAsync(id);
+
+			if (survey == null) RedirectToAction("Index", "Home");
+
+			var surveyModel = new SurveyViewModel()
+			{
+				Id = survey.Id,
+				Title = survey.Title,
+				CreatedAt = survey.CreatedAt,
+				UpdatedAt = survey.UpdatedAt,
+				Questions = survey.Questions,
+				FilledSurveys = survey.FilledSurveys
+			};
+
+			var filledSurveyModel = new FilledSurveyViewModel()
+			{
+				Survey = survey
+			};
+
+			var tupleModel = new Tuple<SurveyViewModel, FilledSurveyViewModel>(surveyModel, filledSurveyModel);
+
+			return View(tupleModel);
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
