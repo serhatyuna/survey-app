@@ -5,26 +5,127 @@
     ViewData["Title"] = "Survey Details";
 }
 
-<div class="container">
-    <h3 class="mb-2" style="font-size: 1.5rem">@ViewData["Title"]</h3>
-    <div>
-        <span>@Html.DisplayNameFor(model => model.Title): @Model.Title</span>
-    </div>
-    <div>
-        <span>@Html.DisplayNameFor(model => model.CreatedAt): @Model.CreatedAt.Humanize()</span>
+@section Styles {
+    <link href="~/css/details.css" rel="stylesheet" />
+}
+
+@{
+    var counts = new int[Model.Questions.Count, Model.Questions[0].Options.Count];
+
+    for (int q = 0; q < Model.Questions.Count; q++)
+    {
+        for (int i = 0; i < Model.FilledSurveys.Count; i++)
+        {
+            for (int j = 0; j < Model.FilledSurveys[i].FilledSurveyOptions.Count; j++)
+            {
+                if (Model.FilledSurveys[i].FilledSurveyOptions[j].Option.Question.Id == Model.Questions[q].Id)
+                {
+                    var indexOfOption = Model.Questions[q].Options
+                        .IndexOf(Model.FilledSurveys[i].FilledSurveyOptions[j].Option);
+
+                    counts[q, indexOfOption]++;
+                }
+            }
+        }
+    }
+
+    int[] first = new int[counts.GetLength(1)];
+    string[] arrays = new string[counts.GetLength(0)];
+
+    for (int i = 0; i < counts.GetLength(0); i++)
+    {
+        for (int j = 0; j < counts.GetLength(1); j++)
+        {
+            first[j] = counts[i, j];
+        }
+        arrays[i] = @String.Join(", ", first.Select(p => p.ToString()).ToArray());
+    }
+
+    int answerCount = 0;
+}
+
+<div class="container mt-5">
+    <h3 class="mb-2">@ViewData["Title"]: @Model.Title</h3>
+    <div class="survey-info">
+        <span>
+            @if (Model.FilledSurveys.Count > 0)
+            {
+                @("person".ToQuantity(Model.FilledSurveys.Count)) @:answered
+            } else
+            {
+                @:no one answered
+            }
+        </span>
+        <span>@Model.CreatedAt.Humanize()</span>
     </div>
 
-    <div>
+    <div class="questions">
         <h5 class="my-4">Questions</h5>
         @foreach (var question in Model.Questions)
         {
-            <div>
-                <div class="mb-3">Q. @question.Title</div>
-                @foreach (var option in question.Options)
-                {
-                    <div class="pl-2">• @option.Title</div>
-                }
+            <div class="question">
+                <div class="question-title">@question.Title</div>
+                <div class="options">
+                    @foreach (var option in question.Options)
+                    {
+                        <div class="option">@option.Title</div>
+                    }
+                </div>
+                <div class="answers">
+                    <canvas id="answer-chart-@(answerCount++)" width="400" height="225"></canvas>
+                </div>
             </div>
         }
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script>
+        var letters = ["A", "B", "C", "D", "E"];
+        var backgroundColors = ["#3e95cd", "#c45850", "#8e5ea2", "#3cba9f", "#e8c3b9"];
+
+        var arrays = [
+        @for (int i = 0; i < arrays.Length; i++)
+        {
+            @:[@arrays[i]]
+
+            if (i + 1 != arrays.Length)
+            {
+                @:,
+            }
+        }
+        ];
+
+        for (var i = 0; i < @counts.GetLength(0); i++) {
+            var id = 'answer-chart-' + i;
+            if (arrays[i].every(item => item === 0)) {
+                var canvasElement = $('#' + id);
+                canvasElement
+                    .parent()
+                    .addClass('no-answer')
+                    .append('<span>There is no answer for this question yet!</span>');
+
+                canvasElement.remove();
+            } else {
+                var ctx = document.getElementById(id).getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: letters.slice(0, @Model.Questions[0].Options.Count),
+                        datasets: [{
+                            backgroundColor: backgroundColors.slice(0, @Model.Questions[0].Options.Count),
+                            data: arrays[i]
+                        }]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Answers for question ' + (i + 1)
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+}
