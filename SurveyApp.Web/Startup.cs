@@ -60,12 +60,6 @@ namespace SurveyApp.Web
 
 			app.UseEndpoints(endpoints =>
 			{
-				//endpoints.MapControllerRoute("blog", "{id}-animal", new { controller = "animal", action = "index" });
-				//routes.MapRoute(
-				//						 "customroutes",
-				//						 "blog/icerik/{yil}/{blogId}",
-				//						 new { controller = "Blog", action = "Detail" },
-				//						 new { yil = @"\d4", blogId = @"\d10" });
 				endpoints.MapControllerRoute(
 									name: "default",
 									pattern: "{controller=Home}/{action=Index}/{id?}");
