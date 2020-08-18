@@ -10,7 +10,6 @@ using SurveyApp.Web.Models;
 
 namespace SurveyApp.Web.Controllers
 {
-	// 	[Route("api/[controller]")]
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
@@ -23,17 +22,6 @@ namespace SurveyApp.Web.Controllers
 		public IActionResult Index()
 		{
 			return View();
-		}
-
-		[HttpGet("test/{surveyId}")]
-		public IActionResult Test(string surveyId)
-		{
-			return Content(surveyId);
-		}
-
-		public string Test2(string name, int numTimes = 1)
-		{
-			return HtmlEncoder.Default.Encode($"Hello {name}, NumTimes is: {numTimes}");
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
