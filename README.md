@@ -14,7 +14,7 @@ requirements:
 
 -   [X] Survey Coordinators can define, conduct, and view surveys and survey results.
 -   [X] Survey Coordinators can login to the app to access functions, like defining a survey.
--   [ ] Survey Respondents can answer a survey as a guest.
+-   [X] Survey Respondents can answer a survey as a guest.
 
 ### Defining a Survey
 
@@ -27,10 +27,9 @@ requirements:
 
 ### Answering a Survey
 -   [X] Survey Respondents should see the title of the survey and the questions below the title.
--   [ ] Survey Respondent can select responses to survey questions by clicking on a checkbox
--   [ ] Survey Respondents can click a 'Submit' button submit their responses to the survey.
--   [ ] Survey Respondents can click a 'Cancel' button to return to the home page without submitting the survey.
--   [ ] Survey Respondents can see an error message if 'Submit' is clicked, but not all questions have been responded to.
+-   [X] Survey Respondent can select responses to survey questions by clicking on a checkbox
+-   [X] Survey Respondents can click a 'Submit' button submit their responses to the survey.
+-   [X] Survey Respondents can click a 'Cancel' button to return to the home page without submitting the survey.
 
 ### Conducting a Survey
 
@@ -39,10 +38,14 @@ requirements:
 
 ### Viewing Survey Results
 
--   [ ] Survey Coordinators can select the survey to display from a list of closed surveys
--   [ ] Survey Coordinators can view survey results as in tabular format showing the number of responses for each of the possible selections to the questions.
+-   [X] Survey Coordinators can select the survey to display from a list surveys
+-   [X] Survey Coordinators can view survey results as in a pie chart showing the number of responses for each of the possible selections to the questions.
 
 ## Bonus features
 
--   [ ] Survey Respondents cannot complete the same survey more than once (maybe save the e-mail or IP address of the respondent)
--   [ ] Survey Coordinators and Survey Respondents can view graphical representations of survey results (e.g. pie, bar, column, etc. charts)
+-   [X] Survey Respondents cannot complete the same survey more than once (maybe save the **e-mail** or ~~IP address~~ of the respondent)
+-   [X] Survey Coordinators and Survey Respondents can view graphical representations of survey results (e.g. pie, bar, column, etc. charts)
+
+## TODO
+
+-   [ ] Display if any form validation errors.
