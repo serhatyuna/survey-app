@@ -153,6 +153,34 @@ namespace SurveyApp.Web.Controllers
 			return View(tupleModel);
 		}
 
+		[AllowAnonymous]
+		[HttpPost]
+		[ActionName("Answer")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> AnswerPost(FilledSurveyViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				string messages = string.Join("; ", ModelState.Values
+																				.SelectMany(x => x.Errors)
+																				.Select(x => x.ErrorMessage));
+
+				return RedirectToAction("Answer");
+			}
+
+			var isEmailUsed = await _surveyService.isEmailAnsweredSurvey(model.Email, model.SurveyId);
+
+			if (isEmailUsed) return RedirectToAction("Answer"); // TODO: implement an error structure
+
+			var isSuccessful = await _surveyService.CreateFilledSurveyAsync(model);
+
+			if (!isSuccessful)
+			{
+				return RedirectToAction("Answer");
+			}
+			return RedirectToAction("Index", "Home");
+		}
+
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{

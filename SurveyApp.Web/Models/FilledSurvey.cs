@@ -11,6 +11,7 @@ namespace SurveyApp.Web.Models
 		public int Id { get; set; }
 
 		[Required]
+		[EmailAddress]
 		public string Email { get; set; }
 
 		public DateTime CreatedAt { get; set; }

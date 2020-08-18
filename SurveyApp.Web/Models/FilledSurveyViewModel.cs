@@ -7,6 +7,7 @@ namespace SurveyApp.Web.Models
 	public class FilledSurveyViewModel
 	{
 		[Required]
+		[EmailAddress]
 		public string Email { get; set; }
 
 		public DateTime CreatedAt { get; set; }

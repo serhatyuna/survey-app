@@ -35,6 +35,9 @@ namespace SurveyApp.Web.Services
 				.Include(s => s.Questions)
 					.ThenInclude(q => q.Options)
 				.Include(s => s.FilledSurveys)
+					.ThenInclude(f => f.FilledSurveyOptions)
+						.ThenInclude(o => o.Option)
+							.ThenInclude(o => o.Question)
 				.FirstOrDefaultAsync();
 		}
 
@@ -63,11 +66,44 @@ namespace SurveyApp.Web.Services
 			return saveResult > 1;
 		}
 
+		public async Task<bool> CreateFilledSurveyAsync(FilledSurveyViewModel model)
+		{
+			var survey = await GetSurveyByIdAsync(model.SurveyId);
+			var filledSurvey = new FilledSurvey
+			{
+				CreatedAt = DateTime.Now,
+				Survey = survey,
+				Email = model.Email,
+				SurveyId = model.SurveyId,
+				FilledSurveyOptions = model.FilledSurveyOptions
+			};
+
+			_context.FilledSurveys.Add(filledSurvey);
+			var saveResult = await _context.SaveChangesAsync();
+			return saveResult > 1;
+		}
+
+		public async Task<bool> isEmailAnsweredSurvey(string email, int surveyId)
+		{
+			var result = await _context.FilledSurveys
+				.FirstOrDefaultAsync(f => f.Email == email && f.SurveyId == surveyId);
+
+			return !(result == null);
+		}
+
 		public async Task<bool> DeleteSurveyAsync(Survey survey, ApplicationUser user)
 		{
 			_context.Surveys.Remove(survey);
 			var saveResult = await _context.SaveChangesAsync();
 			return saveResult > 1;
+		}
+
+		public async Task<Option> GetOptionById(int id)
+		{
+			return await _context.Options
+				.Where(s => s.Id == id)
+				.Include(s => s.Question)
+				.FirstOrDefaultAsync();
 		}
 	}
 }
