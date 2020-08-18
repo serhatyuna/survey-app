@@ -97,13 +97,5 @@ namespace SurveyApp.Web.Services
 			var saveResult = await _context.SaveChangesAsync();
 			return saveResult > 1;
 		}
-
-		public async Task<Option> GetOptionById(int id)
-		{
-			return await _context.Options
-				.Where(s => s.Id == id)
-				.Include(s => s.Question)
-				.FirstOrDefaultAsync();
-		}
 	}
 }
