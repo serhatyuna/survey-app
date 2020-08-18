@@ -96,3 +96,13 @@ requirements:
 ![Survey Details Page](/screenshots/s_survey_details_1.png)
 
 ![Survey Details Page](/screenshots/s_survey_details_2.png)
+
+---
+
+## Credits
+
+-    [Katerina Limpitsouni (undraw.co)](https://undraw.co/) for the survey illustration
+
+## License
+
+-    [MIT License](https://github.com/serhatyuna/survey-app/blob/master/LICENSE)
